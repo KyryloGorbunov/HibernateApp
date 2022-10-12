@@ -1,15 +1,15 @@
 package org.example.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "person")
+@Table(name = "Person")
 public class Person {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private int id;
 
     @Column(name = "name")
@@ -17,6 +17,9 @@ public class Person {
 
     @Column(name = "age")
     private int age;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Item> items;
 
     public Person() {
     }
@@ -48,6 +51,14 @@ public class Person {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     @Override
