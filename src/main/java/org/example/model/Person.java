@@ -25,6 +25,10 @@ public class Person {
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private List<Item> items;
 
+    @OneToOne(mappedBy = "person")
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    private Passport passport;
+
     public Person() {
     }
 
@@ -65,12 +69,21 @@ public class Person {
         this.items = items;
     }
 
-    public void addItem(Item item){
+    public void addItem(Item item) {
         if (this.items == null) {
             this.items = new ArrayList<>();
         }
         this.items.add(item);
         item.setOwner(this);
+    }
+
+    public Passport getPassport() {
+        return passport;
+    }
+
+    public void setPassport(Passport passport) {
+        this.passport = passport;
+        passport.setPerson(this);
     }
 
     @Override
@@ -79,6 +92,8 @@ public class Person {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age=" + age +
+                ", items=" + items +
+                ", passport=" + passport +
                 '}';
     }
 }
