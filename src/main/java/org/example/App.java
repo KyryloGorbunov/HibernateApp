@@ -24,46 +24,16 @@ public class App {
         try {
             session.beginTransaction();
 
-            /*Person person = session.get(Person.class, 3);
-            System.out.println(person);
-            List<Item> items = person.getItems();
-            System.out.println(items);*/
+            Person person = new Person("Test3 cascading", 30);
 
-           /* Item item = session.get(Item.class, 5);
-            System.out.println(item);
-            Person person = item.getOwner();
-            System.out.println(person);*/
+            person.addItem(new Item("Item1"));
+            person.addItem(new Item("Item2"));
+            person.addItem(new Item("Item3"));
 
-            /*Person person = session.get(Person.class, 2);
-            Item newItem = new Item("Item from Hibernate", person);
-            person.getItems().add(newItem);
-            session.save(newItem);*/
+/*            JPA cascade
+            session.persist(person);*/
 
-            /*Person person = new Person("Test person", 30);
-            Item newItem2 = new Item("Item from Hibernate 2", person);
-            person.setItems(new ArrayList<>(Collections.singletonList(newItem2)));
             session.save(person);
-            session.save(newItem2);*/
-
-            /*Person person = session.get(Person.class, 3);
-            List<Item> items = person.getItems();
-            for (Item item : items) {
-                session.remove(item);
-            }
-            person.getItems().clear();*/
-
-            /*Person person = session.get(Person.class, 2);
-            session.remove(person);
-            person.getItems().forEach(i -> i.setOwner(null));*/
-
-            Person person = session.get(Person.class, 4);
-            Item item = session.get(Item.class, 1);
-
-            item.getOwner().getItems().remove(item);
-
-            item.setOwner(person);
-
-            person.getItems().add(item);
 
             session.getTransaction().commit();
 
