@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.model.Item;
+import org.example.model.Passport;
 import org.example.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,7 +17,9 @@ import java.util.List;
  */
 public class App {
     public static void main(String[] args) {
-        Configuration configuration = new Configuration().addAnnotatedClass(Person.class).addAnnotatedClass(Item.class);
+        Configuration configuration = new Configuration().addAnnotatedClass(Person.class)
+                .addAnnotatedClass(Item.class)
+                .addAnnotatedClass(Passport.class);
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.getCurrentSession();
@@ -24,16 +27,22 @@ public class App {
         try {
             session.beginTransaction();
 
-            Person person = new Person("Test3 cascading", 30);
+           /* Person person = new Person("Test person passport", 50);
+            Passport passport = new Passport(12345);
+            person.setPassport(passport);
+            session.save(person);*/
 
-            person.addItem(new Item("Item1"));
-            person.addItem(new Item("Item2"));
-            person.addItem(new Item("Item3"));
+           /* Person person = session.get(Person.class, 9);
+            System.out.println(person.getPassport().getPassportNumber());*/
 
-/*            JPA cascade
-            session.persist(person);*/
+            /*Passport passport = session.get(Passport.class, 9);
+            System.out.printf(passport.getPerson().getName());*/
 
-            session.save(person);
+            /*Person person = session.get(Person.class, 9);
+            person.getPassport().setPassportNumber(77777);*/
+
+            Person person = session.get(Person.class, 9);
+            session.remove(person);
 
             session.getTransaction().commit();
 
