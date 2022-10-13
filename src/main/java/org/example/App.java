@@ -1,6 +1,7 @@
 package org.example;
 
-import org.example.model.*;
+import org.example.model.Item;
+import org.example.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -15,51 +16,29 @@ import java.util.List;
  */
 public class App {
     public static void main(String[] args) {
-        Configuration configuration = new Configuration()
-                .addAnnotatedClass(Person.class)
-                .addAnnotatedClass(Item.class)
-                .addAnnotatedClass(Passport.class)
-                .addAnnotatedClass(Actor.class)
-                .addAnnotatedClass(Movie.class);
+        Configuration configuration = new Configuration().addAnnotatedClass(Person.class).addAnnotatedClass(Item.class);
 
         SessionFactory sessionFactory = configuration.buildSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
 
-        try (sessionFactory) {
-            Session session = sessionFactory.getCurrentSession();
+        try {
             session.beginTransaction();
 
-            /*Movie movie = new Movie("Pulp fuction", 1994);
-            Actor actor1 = new Actor("Harvey Keitel", 81);
-            Actor actor2 = new Actor("Samuel L. Jackson", 72);
+            Person person = new Person("Test3 cascading", 30);
 
-            movie.setActors(new ArrayList<>(List.of(actor1, actor2)));
-            actor1.setMovies(new ArrayList<>(Collections.singleton(movie)));
-            actor2.setMovies(new ArrayList<>(Collections.singleton(movie)));
+            person.addItem(new Item("Item1"));
+            person.addItem(new Item("Item2"));
+            person.addItem(new Item("Item3"));
 
-            session.save(movie);
-            session.save(actor1);
-            session.save(actor2);*/
+/*            JPA cascade
+            session.persist(person);*/
 
-           /* Movie movie = session.get(Movie.class, 1);
-            System.out.println(movie.getActors());
-            Actor actor = session.get(Actor.class, 1);
-            System.out.println(actor.getMovies());*/
-
-            /*Movie movie = new Movie("Reservoir Dogs", 1992);
-            Actor actor = session.get(Actor.class, 1);
-            movie.setActors(new ArrayList<>(Collections.singleton(actor)));
-            actor.getMovies().add(movie);
-            session.save(movie);*/
-
-            Actor actor = session.get(Actor.class, 2);
-            System.out.println(actor.getMovies());
-
-            Movie movieToRemove = actor.getMovies().get(0);
-
-            actor.getMovies().remove(0);
-            movieToRemove.getActors().remove(actor);
+            session.save(person);
 
             session.getTransaction().commit();
+
+        } finally {
+            sessionFactory.close();
         }
     }
 }
