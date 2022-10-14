@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.model.*;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -28,37 +29,33 @@ public class App {
             Session session = sessionFactory.getCurrentSession();
             session.beginTransaction();
 
-            /*Movie movie = new Movie("Pulp fuction", 1994);
-            Actor actor1 = new Actor("Harvey Keitel", 81);
-            Actor actor2 = new Actor("Samuel L. Jackson", 72);
+            Person person = session.get(Person.class, 1);
+            System.out.println("We got a person");
+//            System.out.println(person.getItems());
+//            Hibernate.initialize(person.getItems());
 
-            movie.setActors(new ArrayList<>(List.of(actor1, actor2)));
-            actor1.setMovies(new ArrayList<>(Collections.singleton(movie)));
-            actor2.setMovies(new ArrayList<>(Collections.singleton(movie)));
+            /*Item item = session.get(Item.class, 1);
+            System.out.println("We got an item");*/
 
-            session.save(movie);
-            session.save(actor1);
-            session.save(actor2);*/
+            session.getTransaction().commit();
 
-           /* Movie movie = session.get(Movie.class, 1);
-            System.out.println(movie.getActors());
-            Actor actor = session.get(Actor.class, 1);
-            System.out.println(actor.getMovies());*/
+            System.out.println("Session close");
 
-            /*Movie movie = new Movie("Reservoir Dogs", 1992);
-            Actor actor = session.get(Actor.class, 1);
-            movie.setActors(new ArrayList<>(Collections.singleton(actor)));
-            actor.getMovies().add(movie);
-            session.save(movie);*/
+            session = sessionFactory.getCurrentSession();
+            session.beginTransaction();
 
-            Actor actor = session.get(Actor.class, 2);
-            System.out.println(actor.getMovies());
+            System.out.println("Inside of second transaction");
 
-            Movie movieToRemove = actor.getMovies().get(0);
+            person = (Person) session.merge(person);
 
-            actor.getMovies().remove(0);
-            movieToRemove.getActors().remove(actor);
-            sessionFactory.close();
+            Hibernate.initialize(person.getItems());
+
+            session.getTransaction().commit();
+
+            System.out.println("Out of second transaction");
+
+            System.out.println(person.getItems());
+
         }
     }
 }
